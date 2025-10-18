@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>/kdr/ - K-Drama | GUUM</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.dark-bg {
+      background-color: #1e1e1e;
+      color: #c98aff;
+      font-family: Arial, sans-serif;
+    }
+
+    .thread-item img {
+      width: 180px;
+      max-height: 200px;
+      border-radius: 10px;
+      cursor: zoom-in;
+      transition: transform 0.3s ease;
+      object-fit: contain;
+      box-shadow: 0 0 6px rgba(150, 0, 255, 0.5);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 25px;
+      right: 35px;
+      font-size: 30px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .hidden { display: none; }
+
+    button {
+      background-color: #8b4bff;
+      border: none;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 6px;
+    }
+
+    button:hover {
+      background-color: #a86cff;
+    }
+
+    .delete-btn {
+      background-color: #ff4b4b;
+    }
+
+    .thread-item {
+      background-color: #2a2a2a;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px;
+      box-shadow: 0 0 8px rgba(150, 0, 255, 0.3);
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .thread-content {
+      flex: 1;
+    }
+
+    textarea, input {
+      background-color: #1e1e1e;
+      color: #c98aff;
+      border: 1px solid #8b4bff;
+      border-radius: 6px;
+      padding: 5px;
+      width: 90%;
+    }
+
+    .violet { color: #c98aff; }
+
+    .reply-box {
+      margin-top: 10px;
+      background: #1b1b1b;
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    .reply-box p {
+      margin: 4px 0;
+      color: #b78aff;
+    }
+
+    .reply-form {
+      background: #222;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #8b4bff;
+    }
+
+    .reply-form label {
+      font-size: 14px;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .reply-form button {
+      margin-top: 6px;
+    }
+
+  </style>
+</head>
+<body class="dark-bg">
+  <header class="centered-header">
+    <h1 class="board-title">/Kdr/ - K-Drama</h1>
+    <p class="subtitle">Tablero para conversar sobre Series y Telenovelas Coreanas 🌸</p>
+  </header>
+
+  <main>
+    <section>
+      <button id="createThreadBtn">➕ Crear nuevo hilo</button>
+
+      <form id="threadForm" class="hidden">
+        <h3>👉 ¡Participa creando hilos para compartir y debatir!</h3>
+        <label>Nombre o Apodo:</label>
+        <input type="text" id="username" placeholder="Anónimo o apodo">
+        
+        <label>Descripción:</label>
+        <textarea id="description" rows="4" placeholder="Escribe tu mensaje..."></textarea>
+        
+        <label>Seleccionar imagen:</label>
+        <input type="file" id="imageInput" accept="image/*">
+
+        <button type="submit" id="publishBtn">PUBLICAR</button>
+      </form>
+    </section>
+
+    <section class="threads">
+      <h2>💜 Hilos recientes</h2>
+      <div id="threadList"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 GUUM - Tablero /kdr/ 💜</p>
+  </footer>
+
+  <!-- Modal de imagen -->
+  <div class="modal" id="imageModal">
+    <span class="close-modal" id="closeModal">&times;</span>
+    <img id="modalImg" src="" alt="Imagen ampliada">
+  </div>
+
+  <script>
+    const admins = [
+      { nombre: "TonKun", clave: "orestenevado46dog" },
+      { nombre: "Abril", clave: "asiquetrepate" },
+      { nombre: "Drakarcat", clave: "cat999" }
+    ];
+
+    const STORAGE_KEY = 'kdrThreads'; 
+    const createBtn = document.getElementById('createThreadBtn');
+    const form = document.getElementById('threadForm');
+    const threadList = document.getElementById('threadList');
+
+    createBtn.addEventListener('click', () => form.classList.toggle('hidden'));
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value || "Anónimo";
+      const description = document.getElementById('description').value;
+      const imageInput = document.getElementById('imageInput');
+      if (!description) return alert("Por favor, escribe una descripción.");
+
+      const now = new Date();
+      const date = now.toLocaleDateString();
+      const time = now.toLocaleTimeString();
+      const id = Math.floor(Math.random() * 900000000) + 100000000;
+
+      function guardarHilo(imageURL) {
+        const newThread = { username, description, imageURL, date, time, id, replies: [] };
+        let threads = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        threads.unshift(newThread);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
+        renderThreads();
+        form.reset();
+        form.classList.add('hidden');
+      }
+
+      if (imageInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = () => guardarHilo(reader.result);
+        reader.readAsDataURL(imageInput.files[0]);
+      } else guardarHilo('');
+    });
+
+    function renderThreads() {
+      const threads = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      threadList.innerHTML = "";
+
+      threads.forEach(t => {
+        const threadEl = document.createElement('div');
+        threadEl.className = "thread-item";
+
+        threadEl.innerHTML = `
+          <img src="${t.imageURL || 'https://via.placeholder.com/180x180?text=Sin+imagen'}" 
+               alt="Imagen del hilo" onclick="ampliarImagen('${t.imageURL || ''}')">
+          <div class="thread-content">
+            <p class="meta">
+              <b class="violet">${t.username}</b> | 
+              ${t.date} ${t.time} | 
+              ID: <span class="id violet">${t.id}</span>
+            </p>
+            <p class="desc">${t.description}</p>
+
+            <button class="reply-btn" onclick="mostrarFormularioRespuesta(${t.id})">💬 Responder</button>
+            <button class="delete-btn" onclick="eliminarHilo(${t.id})">🗑️ Eliminar</button>
+
+            <div class="reply-box" id="replies-${t.id}">
+              ${t.replies.map(r => `<p><b class='violet'>${r.username}</b> >>ID:${r.citado} ${r.texto}</p>`).join('')}
+            </div>
+
+            <div id="replyForm-${t.id}" class="reply-form hidden">
+              <label>Nombre o Apodo:</label>
+              <input type="text" id="replyName-${t.id}" placeholder="Anónimo">
+
+              <label>Cita (ID del usuario):</label>
+              <input type="text" id="replyQuote-${t.id}" placeholder="Ej: ${t.id}">
+
+              <label>Escribe tu respuesta:</label>
+              <textarea id="replyText-${t.id}" rows="3" placeholder="Escribe aquí tu respuesta..."></textarea>
+
+              <button onclick="enviarRespuesta(${t.id})">Enviar</button>
+            </div>
+          </div>
+        `;
+        threadList.appendChild(threadEl);
+      });
+    }
+
+    function mostrarFormularioRespuesta(id) {
+      const form = document.getElementById(`replyForm-${id}`);
+      form.classList.toggle('hidden');
+    }
+
+    function enviarRespuesta(id) {
+      const threads = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      const hilo = threads.find(t => t.id === id);
+      if (!hilo) return;
+
+      const username = document.getElementById(`replyName-${id}`).value || "Anónimo";
+      const citado = document.getElementById(`replyQuote-${id}`).value || hilo.id;
+      const texto = document.getElementById(`replyText-${id}`).value;
+      if (!texto.trim()) return alert("Escribe una respuesta antes de enviar.");
+
+      hilo.replies.push({ username, citado, texto });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
+      renderThreads();
+    }
+
+    function eliminarHilo(id) {
+      const nombre = prompt("Nombre del administrador:");
+      const clave = prompt("Clave del administrador:");
+      const esAdmin = admins.some(a => a.nombre === nombre && a.clave === clave);
+      if (!esAdmin) return alert("🚫 Acceso denegado. Solo los administradores pueden eliminar hilos.");
+      if (!confirm("¿Seguro que deseas eliminar este hilo?")) return;
+      let threads = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      threads = threads.filter(t => t.id !== id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
+      renderThreads();
+    }
+
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImg");
+    const closeModal = document.getElementById("closeModal");
+
+    function ampliarImagen(url) {
+      if (!url) return;
+      modalImg.src = url;
+      modal.classList.add("active");
+    }
+
+    closeModal.addEventListener("click", () => modal.classList.remove("active"));
+    window.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("active"); });
+
+    renderThreads();
+  </script>
+</body>
+</html>

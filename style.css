@@ -1,0 +1,110 @@
+/* ==== ESTILO GUUM - Bloque unificado ==== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap');
+
+body {
+  background-color: #121212;
+  color: #cba3ff;
+  font-family: 'JetBrains Mono', monospace;
+  margin: 0;
+  padding: 0;
+}
+
+/* HEADER */
+header {
+  background: linear-gradient(90deg, #2c0b4a, #44275b);
+  padding: 25px;
+  border-bottom: 2px solid #b784ff;
+  box-shadow: 0 0 20px #6c33aa80;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3em;
+  color: #e0b3ff;
+  margin: 0;
+  text-shadow: 0 0 10px #9c4aff;
+}
+
+.subtitle {
+  color: #cda6ff;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+/* INTRO */
+.intro {
+  max-width: 850px;
+  margin: 40px auto;
+  background-color: #1a1a1a;
+  border: 1px solid #7d50ff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  box-shadow: 0 0 20px #5b2fa880;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* TABLEROS */
+.board-zone {
+  max-width: 1100px;
+  margin: 0 auto 60px;
+  padding: 20px;
+  text-align: center;
+}
+
+.board-zone h2 {
+  color: #d7b9ff;
+  text-shadow: 0 0 5px #8a44ff;
+  margin-bottom: 25px;
+}
+
+/* Bloque brillante */
+.board-block {
+  display: inline-block;
+  vertical-align: top;
+  background-color: #1f1f1f;
+  border: 1px solid #813dff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #4a208880;
+  padding: 15px 20px;
+  margin: 10px;
+  min-width: 220px;
+}
+
+.board-block h3 {
+  color: #e0c1ff;
+  border-bottom: 1px solid #6534b8;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  text-shadow: 0 0 5px #9c4aff;
+}
+
+/* Enlaces de tableros */
+.board-block a {
+  display: block;
+  color: #cba3ff;
+  text-decoration: none;
+  padding: 6px 0;
+  transition: 0.3s;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.board-block a:hover {
+  background-color: #2c1a48;
+  color: #ffffff;
+  text-shadow: 0 0 6px #b881ff;
+}
+
+/* FOOTER */
+footer {
+  background-color: #1a1a1a;
+  padding: 20px;
+  font-size: 0.9em;
+  border-top: 1px solid #7d50ff;
+  color: #b88cff;
+  text-align: center;
+  margin-top: 50px;
+}

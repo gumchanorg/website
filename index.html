@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌀 GUUM</title> 
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-bg">
+  <header class="centered-header">
+    <div class="header-top">
+      <div class="header-left">
+        <h1 class="guum-title">🌀 GUUM</h1>
+      </div>
+      <div class="header-right">
+        <a href="reglas.html" class="btn-reglas">📌 Reglas</a>
+
+
+    <p class="subtitle">💜 Bienvenidos a GUUM. Es una comunidad para socializar con usuarios de habla hispana sobre temas organizados por tableros como anime, música, fotografía y mucho más. ¡Elige un tablero y comenzá a publicar y debatir!</p> 
+  </header>
+
+  <main class="board-container">
+    <h2 class="section-title">TABLEROS:</h2>
+
+    <div class="board-grid">
+      <!-- GENERAL -->
+      <div class="board-block">
+        <h3>GENERAL</h3>
+        <ul>
+          <li><a href="gen.html">/gen/ - General</a></li>
+          <li><a href="mem.html">/mem/ - Memes</a></li>
+          <li><a href="art.html">/art/ - Dibujos</a></li>
+          <li><a href="gam.html">/gam/ - Juegos</a></li>
+          <li><a href="ter.html">/ter/ - Terror</a></li>
+          <li><a href="tik.html">/tik/ - TikToks</a></li>
+        </ul>
+      </div>
+
+      <!-- INTERESES -->
+      <div class="board-block">
+        <h3>INTERESES</h3>
+        <ul>
+          <li><a href="ser.html">/ser/ - Series</a></li>
+          <li><a href="pel.html">/pel/ - Películas</a></li>
+          <li><a href="com.html">/com/ - Comida</a></li>
+          <li><a href="mus.html">/mus/ - Música</a></li>
+          <li><a href="dep.html">/dep/ - Deportes</a></li>
+          <li><a href="fot.html">/fot/ - Fotografía</a></li>
+        </ul>
+      </div>
+
+      <!-- CULTURA JAPONESA -->
+      <div class="board-block">
+        <h3>CULTURA JAPONESA</h3>
+        <ul>
+          <li><a href="ani.html">/ani/ - Anime</a></li>
+          <li><a href="man.html">/man/ - Manga</a></li>
+          <li><a href="otk.html">/otk/ - Cultura Otaku</a></li>
+          <li><a href="cos.html">/cos/ - Cosplay</a></li>
+        </ul>
+      </div>
+
+      <!-- CULTURA COREANA -->
+      <div class="board-block">
+        <h3>CULTURA COREANA</h3>
+        <ul>
+          <li><a href="kdr.html">/kdr/ - K-Drama</a></li>
+          <li><a href="kpo.html">/kpl/ - K-Pop</a></li>
+          <li><a href="act.html">/act/ - Actores</a></li>
+          <li><a href="not.html">/not/ - Noticias</a></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 GUUM 💜 - "Un espacio de socialización y creatividad"</p>
+  </footer>
+
+  <script>
+    
+    // === SISTEMA DE MODERACIÓN ===
+    const publicaciones = [
+      "Nuevo dibujo que hice",
+      "Conversación interesante",
+      "Tema +18 muy raro",
+      "Video gore encontrado",
+      "Fotos de cosplay"
+    ];
+
+    const palabrasProhibidas = ["+18", "gore", "sexual", "perturbador", "nsfw"];
+    const moderadas = publicaciones.filter(pub =>
+      !palabrasProhibidas.some(p => pub.toLowerCase().includes(p))
+    );
+
+    console.log("🛡️ Hilos aprobados:", moderadas);
+  </script>
+</body>
+</html>
