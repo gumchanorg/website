@@ -1,10 +1,44 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🌀 GUUM</title> 
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Estilo simple para el menú de compartir */
+    .share-menu {
+      display: none;
+      position: absolute;
+      background-color: #2c2c2c;
+      border: 1px solid #555;
+      padding: 5px;
+      border-radius: 5px;
+      top: 40px;
+      right: 0;
+      z-index: 100;
+    }
+
+    .share-menu a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      margin: 3px 0;
+    }
+
+    .share-menu a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-share {
+      position: relative;
+      cursor: pointer;
+      color: #8a2be2;
+      padding: 5px 10px;
+      text-decoration: none;
+      margin-left: 5px;
+    }
+  </style>
 </head>
 <body class="dark-bg">
   <header class="centered-header">
@@ -15,9 +49,19 @@
       <div class="header-right">
         <a href="reglas.html" class="btn-reglas">📌 Reglas</a>
         <a href="faq.html" class="btn-faq">❓ FAQ</a>
+
+        <!-- Botón Compartir -->
+        <div style="display:inline-block; position: relative;">
+          <a class="btn-share" onclick="toggleShareMenu()">🔗 Compartir</a>
+          <div class="share-menu" id="shareMenu">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://guumorg.github.io/website/index.html" target="_blank">Facebook</a>
+            <a href="https://www.instagram.com" target="_blank">Instagram</a>
+            <a href="https://www.threads.net" target="_blank">Threads</a>
+            <a href="https://api.whatsapp.com/send?text=https://guumorg.github.io/website/index.html" target="_blank">WhatsApp</a>
+          </div>
+        </div>
       </div>
     </div>
-
 
     <p class="subtitle">💜 Bienvenidos a GUUM. Es una comunidad para socializar con usuarios de habla hispana sobre temas organizados por tableros como anime, música, fotografía y mucho más. Lo que se destaca de este foro, es que es Anónimo, por lo que no es necesario tener una cuenta registrada. ¡Elige un tablero y comienza a publicar y debatir!</p> 
   </header>
@@ -68,7 +112,7 @@
         <h3>CULTURA COREANA</h3>
         <ul>
           <li><a href="kdr.html">/kdr/ - K-Drama</a></li>
-          <li><a href="kpo.html">/kpl/ - K-Pop</a></li>
+          <li><a href="kpl.html">/kpl/ - K-Pop</a></li>
           <li><a href="act.html">/act/ - Actores</a></li>
           <li><a href="not.html">/not/ - Noticias</a></li>
         </ul>
@@ -81,8 +125,6 @@
   </footer>
 
   <script>
-    
-    // === SISTEMA DE MODERACIÓN ===
     const publicaciones = [
       "Nuevo dibujo que hice",
       "Conversación interesante",
@@ -97,8 +139,24 @@
     );
 
     console.log("🛡️ Hilos aprobados:", moderadas);
+
+    // Función para mostrar/ocultar menú de compartir
+    function toggleShareMenu() {
+      const menu = document.getElementById('shareMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Cerrar menú al hacer clic fuera
+    window.onclick = function(event) {
+      if (!event.target.matches('.btn-share')) {
+        const menus = document.getElementsByClassName('share-menu');
+        for (let i = 0; i < menus.length; i++) {
+          if (menus[i].style.display === 'block') {
+            menus[i].style.display = 'none';
+          }
+        }
+      }
+    }
   </script>
 </body>
 </html>
-
-
