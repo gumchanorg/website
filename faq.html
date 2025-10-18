@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>❓ FAQ - GUUM</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.dark-bg {
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+    .centered-header {
+      text-align: center;
+      padding: 20px;
+    }
+    .btn-reglas, .btn-faq {
+      background-color: #6b00b6;
+      color: #fff;
+      padding: 10px 15px;
+      margin: 0 5px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .faq-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .faq-item {
+      border-bottom: 1px solid #444;
+      padding: 15px 0;
+    }
+    .faq-question {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    .faq-answer {
+      display: none;
+      margin-top: 10px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body class="dark-bg">
+
+  <header class="centered-header">
+    <h1 class="guum-title">❓ FAQ - Preguntas Frecuentes de GUUM</h1>
+    <div>
+
+    </div>
+    <p class="subtitle">💜 Estas son nuestras respuestas a las preguntas frecuentes del sitio que surgen de los usuarios nuevos</p>
+  </header>
+
+  <main class="faq-container">
+    <h2>Preguntas frecuentes</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">¿Qué es GUUM?</div>
+      <div class="faq-answer">GUUM es un imageboard y foro en línea anónimo para usuarios de habla hispana, donde pueden compartir contenido y debatir sobre diversos temas organizados en tableros.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">¿Por qué es un sitio anónimo?</div>
+      <div class="faq-answer">El anonimato permite que todos los usuarios participen sin necesidad de crear una cuenta, fomentando la libertad de expresión y la espontaneidad en las publicaciones.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">¿Qué son los "tableros"?</div>
+      <div class="faq-answer">Los tableros son secciones temáticas del sitio, cada una dedicada a un tema específico como anime, música, memes, deportes, entre otros.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">¿Por qué es un sitio con varias secciones?</div>
+      <div class="faq-answer">Las secciones organizan el contenido para que los usuarios puedan encontrar fácilmente temas de su interés y mantener la comunidad ordenada.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">¿Qué busca realmente este sitio?</div>
+      <div class="faq-answer">GUUM busca ser un espacio seguro y creativo para que la comunidad hispanohablante comparta intereses, ideas y entretenimiento de manera libre y organizada.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">¿Por qué está prohibido el contenido NSFW, gore u otro?</div>
+      <div class="faq-answer">Para proteger a todos los usuarios, mantener un ambiente seguro y evitar contenido que pueda resultar ofensivo, explícito o perturbador.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">¿Quién es el creador del sitio?</div>
+      <div class="faq-answer">El sitio fue creado por un usuario bajo el subanonimato: TonKun. El sitio surgió como un proyecto comunitario para socializar y compartir contenido en español.</div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2025 GUUM 💜 - "Un espacio de socialización y creatividad"</p>
+  </footer>
+
+  <script>
+    // Acordeón FAQ
+    const questions = document.querySelectorAll('.faq-question');
+    questions.forEach(q => {
+      q.addEventListener('click', () => {
+        const answer = q.nextElementSibling;
+        answer.style.display = (answer.style.display === 'block') ? 'none' : 'block';
+      });
+    });
+  </script>
+</body>
+</html>
