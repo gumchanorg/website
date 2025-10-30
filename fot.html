@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>/fot/ - Fotografía | GUUM</title>
+  <title>/fot/ - Fotografía | GumChan</title>
   <link rel="stylesheet" href="style.css">
   <style>
     body.dark-bg {
@@ -104,14 +104,27 @@
 
     .reply-box {
       margin-top: 10px;
-      background: #1b1b1b;
-      padding: 8px;
-      border-radius: 8px;
     }
 
-    .reply-box p {
+    .reply-item {
+      background-color: #2e2e2e;
+      border: 1px solid #8b4bff;
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 6px;
+      box-shadow: 0 0 4px rgba(150, 0, 255, 0.3);
+    }
+
+    .reply-item p {
       margin: 4px 0;
       color: #b78aff;
+    }
+
+    .reply-item img, .reply-item video {
+      margin-top: 5px;
+      max-width: 120px;
+      border-radius: 10px;
+      box-shadow: 0 0 6px rgba(150, 0, 255, 0.5);
     }
 
     .reply-form {
@@ -132,12 +145,28 @@
       margin-top: 6px;
     }
 
+    video {
+      max-width: 200px;
+      border-radius: 10px;
+      margin-top: 6px;
+      box-shadow: 0 0 6px rgba(150, 0, 255, 0.5);
+    }
+
+    .reply-img {
+      width: 120px;
+      max-height: 120px;
+      border-radius: 10px;
+      cursor: zoom-in;
+      display: block;
+      margin-top: 5px;
+      box-shadow: 0 0 6px rgba(150, 0, 255, 0.5);
+    }
   </style>
 </head>
 <body class="dark-bg">
   <header class="centered-header">
     <h1 class="board-title">/fot/ - Fotografía</h1>
-    <p class="subtitle">Tablero para compartir fotos del momento 📸</p>
+    <p class="subtitle">Tablero para compatir fotos del momento 📸</p>
   </header>
 
   <main>
@@ -166,7 +195,7 @@
   </main>
 
   <footer>
-    <p>© 2025 GUUM - Tablero /fot/ 💜</p>
+    <p>© 2025 GumChan - Tablero /fot/ 💜</p>
   </footer>
 
   <!-- Modal de imagen -->
@@ -182,7 +211,10 @@
       { nombre: "Drakarcat", clave: "cat999" }
     ];
 
-    const STORAGE_KEY = 'fotThreads'; 
+    const STORAGE_KEY = 'actThreads'; 
+    const USER_ID_KEY = 'userIds';
+    let userIds = JSON.parse(localStorage.getItem(USER_ID_KEY)) || {};
+
     const createBtn = document.getElementById('createThreadBtn');
     const form = document.getElementById('threadForm');
     const threadList = document.getElementById('threadList');
@@ -218,6 +250,15 @@
       } else guardarHilo('');
     });
 
+    function obtenerIdUsuario(username) {
+      if (!username) username = "Anónimo";
+      if (userIds[username]) return userIds[username];
+      const newId = Math.floor(Math.random() * 900000000) + 100000000;
+      userIds[username] = newId;
+      localStorage.setItem(USER_ID_KEY, JSON.stringify(userIds));
+      return newId;
+    }
+
     function renderThreads() {
       const threads = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
       threadList.innerHTML = "";
@@ -238,10 +279,18 @@
             <p class="desc">${t.description}</p>
 
             <button class="reply-btn" onclick="mostrarFormularioRespuesta(${t.id})">💬 Responder</button>
-            <button class="delete-btn" onclick="eliminarHilo(${t.id})">🗑️ Eliminar</button>
+            <button class="delete-btn" onclick="eliminarHilo(${t.id})">🗑️ Eliminar (ADMIN)</button>
 
             <div class="reply-box" id="replies-${t.id}">
-              ${t.replies.map(r => `<p><b class='violet'>${r.username}</b> >>ID:${r.citado} ${r.texto}</p>`).join('')}
+              ${t.replies.map(r => `
+                <div class="reply-item">
+                  <p><b class='violet'>${r.username}</b> | ID: ${r.userId}${r.citado ? ` | >> ${r.citado}` : ''}</p>
+                  <p class="reply-text">${r.texto}</p>
+                  ${r.file ? (r.file.startsWith('data:image')
+                    ? `<img src='${r.file}' class='reply-img' onclick='ampliarImagen("${r.file}")'>`
+                    : `<video src='${r.file}' controls></video>`) : ''}
+                </div>
+              `).join('')}
             </div>
 
             <div id="replyForm-${t.id}" class="reply-form hidden">
@@ -253,6 +302,9 @@
 
               <label>Escribe tu respuesta:</label>
               <textarea id="replyText-${t.id}" rows="3" placeholder="Escribe aquí tu respuesta..."></textarea>
+
+              <label>Seleccionar archivo (Opcional):</label>
+              <input type="file" id="replyFile-${t.id}" accept="image/*,video/*">
 
               <button onclick="enviarRespuesta(${t.id})">Enviar</button>
             </div>
@@ -273,13 +325,25 @@
       if (!hilo) return;
 
       const username = document.getElementById(`replyName-${id}`).value || "Anónimo";
-      const citado = document.getElementById(`replyQuote-${id}`).value || hilo.id;
+      const userId = obtenerIdUsuario(username);
+      const citado = document.getElementById(`replyQuote-${id}`).value || '';
       const texto = document.getElementById(`replyText-${id}`).value;
-      if (!texto.trim()) return alert("Escribe una respuesta antes de enviar.");
+      const fileInput = document.getElementById(`replyFile-${id}`);
+      if (!texto.trim() && fileInput.files.length === 0) return alert("Escribe una respuesta o adjunta un archivo.");
 
-      hilo.replies.push({ username, citado, texto });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
-      renderThreads();
+      function guardarRespuesta(fileData) {
+        hilo.replies.push({ username, citado, texto, file: fileData, userId });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(threads));
+        renderThreads();
+      }
+
+      if (fileInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = () => guardarRespuesta(reader.result);
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        guardarRespuesta(null);
+      }
     }
 
     function eliminarHilo(id) {
